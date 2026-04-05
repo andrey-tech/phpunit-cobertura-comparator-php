@@ -71,6 +71,7 @@ final readonly class Storage
             SELECT 
                 m.file,
                 m.class_name,
+                'old' AS class_status,
                 m.method_name,
                 (SELECT old.method_line_rate
                  FROM metrics old 
@@ -110,6 +111,7 @@ final readonly class Storage
             SELECT 
                 old.file,
                 old.class_name,
+                'old' AS class_status,
                 old.method_name,
                 old.method_line_rate AS old_method_line_rate,
                 NULL AS new_method_line_rate,

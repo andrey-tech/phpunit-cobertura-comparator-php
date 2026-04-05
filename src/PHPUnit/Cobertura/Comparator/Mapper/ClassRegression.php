@@ -21,6 +21,7 @@ final class ClassRegression
     public function __construct(
         public readonly string $file,
         public readonly string $name,
+        public readonly string $status,
         public readonly float $oldLineRate,
         public readonly float $newLineRate,
         public readonly float $oldBranchRate,

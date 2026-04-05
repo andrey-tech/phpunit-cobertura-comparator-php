@@ -32,6 +32,7 @@ final class Mapper
             $classes[$name] ??= new ClassRegression(
                 file: (string) $row->file,
                 name: $name,
+                status: (string) $row->class_status,
                 oldLineRate: (float) $row->old_class_line_rate,
                 newLineRate: (float) $row->new_class_line_rate,
                 oldBranchRate: (float) $row->old_class_branch_rate,
