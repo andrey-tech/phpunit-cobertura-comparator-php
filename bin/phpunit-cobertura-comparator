@@ -1,0 +1,43 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * @author    andrey-tech
+ * @copyright 2026 andrey-tech
+ * @link      https://github.com/andrey-tech/
+ * @license   MIT
+ */
+
+declare(strict_types=1);
+
+use AndreyTech\PHPUnit\Cobertura\Comparator\Application;
+
+(static function() {
+    $counter = 0;
+    $path = 'vendor';
+    do {
+        $counter++;
+        $path = '/../' . $path;
+        $autoloadFile = __DIR__ . $path . '/autoload.php';
+
+        if (is_file($autoloadFile)) {
+            if (is_readable($autoloadFile)) {
+                require_once $autoloadFile;
+
+                return;
+            }
+
+            throw new RuntimeException('Cannot read Composer file "autoload.php".');
+        }
+    } while ($counter <= 5);
+
+    throw new RuntimeException('Cannot find Composer file "autoload.php".');
+})();
+
+(new class
+{
+    public function __invoke(): void
+    {
+        exit((new Application())->run());
+    }
+})();
