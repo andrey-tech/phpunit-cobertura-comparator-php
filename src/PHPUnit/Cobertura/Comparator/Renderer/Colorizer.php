@@ -16,15 +16,14 @@ final readonly class Colorizer
     private const string NO_VALUE = 'x';
     private const string DECOR_OK = 'green';
     private const string DECOR_ERROR = 'red+bold';
-    private const string DECOR_WARNING = 'yellow+bold';
+    private const string DECOR_WARNING = 'yellow';
 
     public function colorizeStatus(string $status): string
     {
         return match ($status) {
             'new' => $this->decorate('new', self::DECOR_OK),
-            'old' => $this->decorate('old'),
-            'del' => $this->decorate('del', self::DECOR_ERROR),
-            default => $this->decorate($status, null),
+            'del' => $this->decorate('new', self::DECOR_WARNING),
+            default => $this->decorate($status),
         };
     }
 

@@ -13,10 +13,10 @@ namespace AndreyTech\PHPUnit\Cobertura\Comparator;
 
 use AndreyTech\PHPUnit\Cobertura\Comparator\Mapper\ClassRegression;
 use AndreyTech\PHPUnit\Cobertura\Comparator\Mapper\MethodRegression;
+use AndreyTech\PHPUnit\Cobertura\Comparator\Renderer\Colorizer;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Output\OutputInterface;
-use AndreyTech\PHPUnit\Cobertura\Comparator\Renderer\Colorizer;
 
 final readonly class Renderer
 {
