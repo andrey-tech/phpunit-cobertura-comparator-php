@@ -11,6 +11,11 @@ declare(strict_types=1);
 
 namespace AndreyTech\PHPUnit\Cobertura\Comparator\Renderer;
 
+use function array_shift;
+use function explode;
+use function implode;
+use function sprintf;
+
 final readonly class Colorizer
 {
     private const string NO_VALUE = 'x';
@@ -79,6 +84,6 @@ final readonly class Colorizer
             return self::NO_VALUE;
         }
 
-        return sprintf('%.2f', 100 * $rate);
+        return sprintf('%.2f', 100.0 * $rate);
     }
 }

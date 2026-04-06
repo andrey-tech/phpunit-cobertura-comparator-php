@@ -15,6 +15,8 @@ use AndreyTech\PHPUnit\Cobertura\Comparator\Mapper\ClassRegression;
 use AndreyTech\PHPUnit\Cobertura\Comparator\Mapper\MethodRegression;
 use stdClass;
 
+use function array_values;
+
 final class Mapper
 {
     /**

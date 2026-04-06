@@ -11,11 +11,11 @@ declare(strict_types=1);
 
 namespace AndreyTech\PHPUnit\Cobertura\Comparator;
 
+use AndreyTech\PHPUnit\Cobertura\Comparator\Parser\File;
+use AndreyTech\PHPUnit\Cobertura\Comparator\Renderer\Colorizer;
 use Exception;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Throwable;
-use AndreyTech\PHPUnit\Cobertura\Comparator\Parser\File;
-use AndreyTech\PHPUnit\Cobertura\Comparator\Renderer\Colorizer;
 
 use function sprintf;
 
@@ -63,15 +63,16 @@ final class Application
         $storage->store(
             $parser->parse(
                 new File('cobertura.xml')
-            ), 0
+            ),
+            0
         );
 
         $storage->store(
             $parser->parse(
                 new File('cobertura1.xml')
-            ), 1
+            ),
+            1
         );
-
 
         $regressions = (new Mapper())->map($storage->getRegressions());
 
@@ -83,7 +84,6 @@ final class Application
 
         return self::EXIT_CODE_OK;
     }
-
 
     private function printStats(int $exitCode): void
     {

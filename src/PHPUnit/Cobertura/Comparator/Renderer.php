@@ -18,11 +18,13 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use function sprintf;
+
 final readonly class Renderer
 {
     public function __construct(
-       private OutputInterface $output,
-       private Colorizer $colorizer
+        private OutputInterface $output,
+        private Colorizer $colorizer
     ) {
     }
 
