@@ -15,6 +15,7 @@ use Exception;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Throwable;
 use AndreyTech\PHPUnit\Cobertura\Comparator\Parser\File;
+use AndreyTech\PHPUnit\Cobertura\Comparator\Renderer\Colorizer;
 
 use function sprintf;
 
@@ -72,9 +73,13 @@ final class Application
         );
 
 
-        $reg = (new Mapper())->map($storage->getRegressions());
+        $regressions = (new Mapper())->map($storage->getRegressions());
 
-        print_r($reg);
+        $renderer = new Renderer(
+            $this->consoleOutput,
+            new Colorizer()
+        );
+        $renderer->render($regressions);
 
         return self::EXIT_CODE_OK;
     }
