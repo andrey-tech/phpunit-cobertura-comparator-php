@@ -24,7 +24,8 @@ final readonly class Renderer
 {
     public function __construct(
         private OutputInterface $output,
-        private Colorizer $colorizer
+        private Colorizer $colorizer,
+        private bool $ignoreBranchRate
     ) {
     }
 
@@ -74,7 +75,13 @@ final readonly class Renderer
 
     private function addTableHeader(Table $table): Table
     {
-        $table->setHeaders(['METHOD', 'status', 'line coverage, %', 'branch coverage, %']);
+        $table->setHeaders([
+            'METHOD',
+            'status',
+            'line coverage, %',
+            ...($this->ignoreBranchRate ? [] : ['branch coverage, %']),
+        ]);
+
         $table->setColumnWidths([25]);
         $table->setColumnMaxWidth(0, 50);
 
@@ -83,21 +90,31 @@ final readonly class Renderer
 
     private function addTableClassRow(Table $table, ClassRegression $classRegression): void
     {
+        $branchRate = $this->colorizer->colorizeCoverage(
+            $classRegression->oldBranchRate,
+            $classRegression->newBranchRate
+        );
+
         $table->addRow([
             '<fg=white;bg=default;options=bold>CLASS</>',
             $this->colorizer->colorizeStatus($classRegression->status),
             $this->colorizer->colorizeCoverage($classRegression->oldLineRate, $classRegression->newLineRate),
-            $this->colorizer->colorizeCoverage($classRegression->oldBranchRate, $classRegression->newBranchRate),
+            ...($this->ignoreBranchRate ? [] : [$branchRate]),
         ]);
     }
 
     private function addTableMethodRow(Table $table, MethodRegression $methodRegression): void
     {
+        $branchRate = $this->colorizer->colorizeCoverage(
+            $methodRegression->oldBranchRate,
+            $methodRegression->newBranchRate
+        );
+
         $table->addRow([
             $methodRegression->name,
             $this->colorizer->colorizeStatus($methodRegression->status),
             $this->colorizer->colorizeCoverage($methodRegression->oldLineRate, $methodRegression->newLineRate),
-            $this->colorizer->colorizeCoverage($methodRegression->oldBranchRate, $methodRegression->newBranchRate),
+            ...($this->ignoreBranchRate ? [] : [$branchRate]),
         ]);
     }
 

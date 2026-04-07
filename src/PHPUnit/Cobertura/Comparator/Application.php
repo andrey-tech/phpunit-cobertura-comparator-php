@@ -43,7 +43,7 @@ final readonly class Application
             $exitCode = $this->doRun();
         } catch (Throwable $exception) {
             $exitCode = self::EXIT_CODE_ERROR;
-            $this->error(
+            $this->printError(
                 sprintf('ERROR: %s', $exception->getMessage())
             );
         }
@@ -62,7 +62,28 @@ final readonly class Application
         $this->configurator->configure();
         $this->consoleOutput->getFormatter()->setDecorated(!$this->configurator->isNoColor());
 
-        $parser = new Parser();
+        (new Renderer(
+            $this->consoleOutput,
+            new Colorizer(),
+            $this->configurator->isIgnoreBranchRate()
+        ))->render(
+            (new Mapper())->map(
+                $this->parseCoberturaFiles()->getRegressions()
+            )
+        );
+
+        return self::EXIT_CODE_OK;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function parseCoberturaFiles(): Storage
+    {
+        $parser = new Parser(
+            $this->configurator->isIgnoreBranchRate()
+        );
+
         $storage = new Storage();
 
         $storage->store(
@@ -83,15 +104,7 @@ final readonly class Application
             1
         );
 
-        $regressions = (new Mapper())->map($storage->getRegressions());
-
-        $renderer = new Renderer(
-            $this->consoleOutput,
-            new Colorizer()
-        );
-        $renderer->render($regressions);
-
-        return self::EXIT_CODE_OK;
+        return $storage;
     }
 
     private function printStats(int $exitCode): void
@@ -106,7 +119,7 @@ final readonly class Application
         );
     }
 
-    private function error(string $message): void
+    private function printError(string $message): void
     {
         $this->consoleOutput->writeln(
             sprintf('<fg=red;options=bold>%s</>', $message)

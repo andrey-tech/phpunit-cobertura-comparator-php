@@ -17,8 +17,13 @@ use Exception;
 use Generator;
 use SimpleXMLElement;
 
-final class Parser
+final readonly class Parser
 {
+    public function __construct(
+        private bool $ignoreBranchRate
+    ) {
+    }
+
     /**
      * @return Generator<Metrics>
      *
@@ -36,10 +41,10 @@ final class Parser
                     file: (string) $class['filename'],
                     className: (string) $class['name'],
                     classLineRate: (float) $class['line-rate'],
-                    classBranchRate: (float) $class['branch-rate'],
+                    classBranchRate: $this->ignoreBranchRate ? 0.0 : (float) $class['branch-rate'],
                     methodName: (string) $method['name'],
                     methodLineRate: (float) $method['line-rate'],
-                    methodBranchRate: (float) $method['branch-rate']
+                    methodBranchRate: $this->ignoreBranchRate ? 0.0 : (float) $method['branch-rate']
                 );
             }
         }

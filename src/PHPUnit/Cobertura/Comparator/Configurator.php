@@ -35,8 +35,13 @@ final class Configurator
         ]);
 
         $definition->addOptions([
-            new InputOption('no-color', null, InputOption::VALUE_NONE, 'Disable color output.'),
-            new InputOption('ignore-branch-coverage', null, InputOption::VALUE_NONE, 'Ignore branch coverage.'),
+            new InputOption('no-color', null, InputOption::VALUE_NONE, 'Disable ANSI color output.'),
+            new InputOption(
+                'ignore-branch-rate',
+                null,
+                InputOption::VALUE_NONE,
+                'Ignore branch-rate in Cobertura XML file.'
+            ),
         ]);
 
         $this->input = new ArgvInput(null, $definition);
@@ -57,8 +62,8 @@ final class Configurator
         return (bool) $this->input->getOption('no-color');
     }
 
-    public function isIgnoreBranchCoverage(): bool
+    public function isIgnoreBranchRate(): bool
     {
-        return (bool) $this->input->getOption('ignore-branch-coverage');
+        return (bool) $this->input->getOption('ignore-branch-rate');
     }
 }
