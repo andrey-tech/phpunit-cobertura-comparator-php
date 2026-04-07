@@ -19,17 +19,19 @@ use Throwable;
 
 use function sprintf;
 
-final class Application
+final readonly class Application
 {
     private const int EXIT_CODE_OK = 0;
     private const int EXIT_CODE_ERROR = 1;
 
     private ConsoleOutput $consoleOutput;
+    private Configurator $configurator;
     private Stats $stats;
 
     public function __construct()
     {
         $this->consoleOutput = new ConsoleOutput();
+        $this->configurator = new Configurator();
         $this->stats = new Stats();
     }
 
@@ -57,19 +59,26 @@ final class Application
      */
     private function doRun(): int
     {
+        $this->configurator->configure();
+        $this->consoleOutput->getFormatter()->setDecorated(!$this->configurator->isNoColor());
+
         $parser = new Parser();
         $storage = new Storage();
 
         $storage->store(
             $parser->parse(
-                new File('cobertura.xml')
+                new File(
+                    $this->configurator->getCoberturaOldFile()
+                )
             ),
             0
         );
 
         $storage->store(
             $parser->parse(
-                new File('cobertura1.xml')
+                new File(
+                    $this->configurator->getCoberturaNewFile()
+                )
             ),
             1
         );
