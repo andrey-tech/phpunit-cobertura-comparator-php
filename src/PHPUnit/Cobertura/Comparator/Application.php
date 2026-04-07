@@ -11,18 +11,21 @@ declare(strict_types=1);
 
 namespace AndreyTech\PHPUnit\Cobertura\Comparator;
 
+use AndreyTech\PHPUnit\Cobertura\Comparator\Mapper\ClassRegression;
 use AndreyTech\PHPUnit\Cobertura\Comparator\Parser\File;
 use AndreyTech\PHPUnit\Cobertura\Comparator\Renderer\Colorizer;
 use Exception;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Throwable;
 
+use function count;
 use function sprintf;
 
 final readonly class Application
 {
     private const int EXIT_CODE_OK = 0;
     private const int EXIT_CODE_ERROR = 1;
+    private const int EXIT_CODE_WARNING = 2;
 
     private ConsoleOutput $consoleOutput;
     private Configurator $configurator;
@@ -62,17 +65,21 @@ final readonly class Application
         $this->configurator->configure();
         $this->consoleOutput->getFormatter()->setDecorated(!$this->configurator->isNoColor());
 
+        $this->printHeader();
+
+        $classRegressions = (new Mapper())->map(
+            $this->parseCoberturaFiles()->getRegressions()
+        );
+
+        $this->printTitle($classRegressions);
+
         (new Renderer(
             $this->consoleOutput,
             new Colorizer(),
             $this->configurator->isIgnoreBranchRate()
-        ))->render(
-            (new Mapper())->map(
-                $this->parseCoberturaFiles()->getRegressions()
-            )
-        );
+        ))->render($classRegressions);
 
-        return self::EXIT_CODE_OK;
+        return 0 === count($classRegressions) ? self::EXIT_CODE_OK : self::EXIT_CODE_WARNING;
     }
 
     /**
@@ -105,6 +112,33 @@ final readonly class Application
         );
 
         return $storage;
+    }
+
+    /**
+     * @param list<ClassRegression> $classRegressions
+     */
+    private function printTitle(array $classRegressions): void
+    {
+        if (0 === count($classRegressions)) {
+            $this->consoleOutput->writeln('<fg=green>No coverage regressions found</>');
+
+            return;
+        }
+
+        $this->consoleOutput->writeln(
+            sprintf('<fg=red>Coverage regressions found in %u class(es):</>', count($classRegressions))
+        );
+    }
+
+    private function printHeader(): void
+    {
+        $this->consoleOutput->writeln(
+            sprintf(
+                'Cobertura coverage comparison: %s -> %s',
+                $this->configurator->getCoberturaOldFile(),
+                $this->configurator->getCoberturaNewFile()
+            )
+        );
     }
 
     private function printStats(int $exitCode): void
