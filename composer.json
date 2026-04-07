@@ -67,7 +67,7 @@
         "cs": "phpcs -s -p --report=full --standard=phpcs.xml.dist",
         "psalm": "psalm --long-progress --output-format=compact --config=psalm.xml.dist",
         "phpmd": "phpmd src ansi phpmd.xml.dist --suffixes php --ignore-violations-on-exit",
-        "pdepend": "pdepend --summary-xml=.summary.xml --suffix=php src && pdepend-summary-formatter --init && pdepend-summary-formatter .summary.xml --config-file=pdepend-summary-formatter.yml.dist --ignore-yellow-metrics-on-exit && rm .summary.xml",
+        "pdepend": "pdepend --summary-xml=.summary.xml --suffix=php src && pdepend-summary-formatter --init && pdepend-summary-formatter .summary.xml --config-file=pdepend-summary-formatter.yml.dist --ignore-yellow-metrics-on-exit && rm .summary.xml pdepend-summary-formatter.yml.dist",
         "test": "phpunit --configuration=phpunit.xml.dist",
         "check": [
             "@lint",
