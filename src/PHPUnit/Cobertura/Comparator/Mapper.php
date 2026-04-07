@@ -31,29 +31,39 @@ final class Mapper
         foreach ($rows as $row) {
             $name = (string) $row->class_name;
 
-            $classes[$name] ??= new ClassRegression(
-                file: (string) $row->file,
-                name: $name,
-                status: (string) $row->class_status,
-                oldLineRate: (float) $row->old_class_line_rate,
-                newLineRate: (float) $row->new_class_line_rate,
-                oldBranchRate: (float) $row->old_class_branch_rate,
-                newBranchRate: (float) $row->new_class_branch_rate
-            );
+            $classes[$name] ??= $this->buildClassRegression($row);
 
             $classes[$name]->addMethod(
-                new MethodRegression(
-                    name: (string) $row->method_name,
-                    status: (string) $row->method_status,
-                    oldLineRate: $this->toFloatOrNull($row->old_method_line_rate),
-                    newLineRate: $this->toFloatOrNull($row->new_method_line_rate),
-                    oldBranchRate: $this->toFloatOrNull($row->old_method_branch_rate),
-                    newBranchRate: $this->toFloatOrNull($row->new_method_branch_rate)
-                )
+                $this->buildMethodRegression($row)
             );
         }
 
         return array_values($classes);
+    }
+
+    private function buildClassRegression(stdClass $row): ClassRegression
+    {
+        return new ClassRegression(
+            file: (string) $row->file,
+            name: (string) $row->class_name,
+            status: (string) $row->class_status,
+            oldLineRate: (float) $row->old_class_line_rate,
+            newLineRate: (float) $row->new_class_line_rate,
+            oldBranchRate: (float) $row->old_class_branch_rate,
+            newBranchRate: (float) $row->new_class_branch_rate
+        );
+    }
+
+    private function buildMethodRegression(stdClass $row): MethodRegression
+    {
+        return new MethodRegression(
+            name: (string) $row->method_name,
+            status: (string) $row->method_status,
+            oldLineRate: $this->toFloatOrNull($row->old_method_line_rate),
+            newLineRate: $this->toFloatOrNull($row->new_method_line_rate),
+            oldBranchRate: $this->toFloatOrNull($row->old_method_branch_rate),
+            newBranchRate: $this->toFloatOrNull($row->new_method_branch_rate)
+        );
     }
 
     private function toFloatOrNull(mixed $value): ?float
