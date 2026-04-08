@@ -27,7 +27,7 @@ final readonly class Colorizer
     {
         return match ($status) {
             'new' => $this->decorate('new', self::DECOR_OK),
-            'del' => $this->decorate('new', self::DECOR_WARNING),
+            'del' => $this->decorate('del', self::DECOR_WARNING),
             default => $this->decorate($status),
         };
     }

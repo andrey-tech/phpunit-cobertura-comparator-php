@@ -134,7 +134,7 @@ final readonly class Application
     {
         $this->consoleOutput->writeln(
             sprintf(
-                'Cobertura coverage comparison: %s -> %s',
+                'Coverage comparison: %s -> %s',
                 $this->configurator->getCoberturaOldFile(),
                 $this->configurator->getCoberturaNewFile()
             )
