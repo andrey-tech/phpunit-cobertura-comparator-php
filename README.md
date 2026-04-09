@@ -28,10 +28,10 @@ composer require --dev andrey-tech/phpunit-cobertura-comparator-php
 The command line:
 
 ```shell
-./vendor/bin/phpunit-cobertura-comparator <path to old Cobertura XML file> <path to new Cobertura XML file>
+./vendor/bin/phpunit-cobertura-comparator <old Cobertura XML file> <new Cobertura XML file>
 ```
 
-The command line interface also accepts the following optional arguments:
+The optional command line arguments:
 
 - `--no-colors` — disable ANSI color output;
 - `--ignore-branch-rate` — ignore branch-rate in a Cobertura XML file.
