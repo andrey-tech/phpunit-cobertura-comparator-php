@@ -160,6 +160,48 @@ final class ScriptTest extends TestCase
         self::assertEmpty($process->getErrorOutput());
     }
 
+    public function testNewClass(): void
+    {
+        $process = $this->runProcess([
+            '--no-color',
+            $this->getDataFileAbsolutePath('05/cobertura-old.xml'),
+            $this->getDataFileAbsolutePath('05/cobertura-new.xml')
+        ]);
+
+        self::assertStringContainsString(
+            $this->getDataFileContents('05/result.txt'),
+            $process->getOutput()
+        );
+
+        self::assertStringContainsString('Exit code:', $process->getOutput());
+        self::assertStringContainsString('Time:', $process->getOutput());
+        self::assertStringContainsString('Memory:', $process->getOutput());
+
+        self::assertSame(0, $process->getExitCode());
+        self::assertEmpty($process->getErrorOutput());
+    }
+
+    public function testDeleteClass(): void
+    {
+        $process = $this->runProcess([
+            '--no-color',
+            $this->getDataFileAbsolutePath('06/cobertura-old.xml'),
+            $this->getDataFileAbsolutePath('06/cobertura-new.xml')
+        ]);
+
+        self::assertStringContainsString(
+            $this->getDataFileContents('06/result.txt'),
+            $process->getOutput()
+        );
+
+        self::assertStringContainsString('Exit code:', $process->getOutput());
+        self::assertStringContainsString('Time:', $process->getOutput());
+        self::assertStringContainsString('Memory:', $process->getOutput());
+
+        self::assertSame(0, $process->getExitCode());
+        self::assertEmpty($process->getErrorOutput());
+    }
+
     /**
      * @param list<string> $options
      */
