@@ -145,7 +145,7 @@ final readonly class Application
     {
         $this->consoleOutput->writeln(
             sprintf(
-                'Exit code: %s, Time: %s, Memory: %s.',
+                'Exit code: %s. Time: %s. Memory: %s.',
                 $exitCode,
                 $this->stats->time(),
                 $this->stats->memory()
