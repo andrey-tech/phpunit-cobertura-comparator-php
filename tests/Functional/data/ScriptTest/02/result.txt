@@ -1,7 +1,7 @@
 Coverage regressions found in 1 class(es):
 CLASS: App\Purchase\Fixer
 +---------------------------+--------+------------------+--------------------+
-| METHOD                    | status | line coverage, % | branch coverage, % |
+| Method                    | Status | Line coverage, % | Branch coverage, % |
 +---------------------------+--------+------------------+--------------------+
 | CLASS                     | old    | 100.00 -> 85.00  | 100.00 -> 100.00   |
 | fix                       | old    | 100.00 -> 100.00 | 100.00 -> 100.00   |

@@ -76,10 +76,10 @@ final readonly class Renderer
     private function addTableHeader(Table $table): Table
     {
         $table->setHeaders([
-            'METHOD',
-            'status',
-            'line coverage, %',
-            ...($this->ignoreBranchRate ? [] : ['branch coverage, %']),
+            'Method',
+            'Status',
+            'Line coverage, %',
+            ...($this->ignoreBranchRate ? [] : ['Branch coverage, %']),
         ]);
 
         $table->setColumnWidths([25]);
