@@ -2,10 +2,10 @@
     "name": "andrey-tech/phpunit-cobertura-comparator-php",
     "description": "A lightweight CLI tool to track PHPUnit code coverage regressions using Cobertura reports",
     "keywords": [
-        "test",
         "phpunit",
         "coverage",
         "cobertura",
+        "test",
         "metrics",
         "console"
     ],
