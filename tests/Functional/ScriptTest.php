@@ -74,6 +74,50 @@ final class ScriptTest extends TestCase
         self::assertEmpty($process->getErrorOutput());
     }
 
+    public function testLineRateRegressionsIgnoreBranchRate(): void
+    {
+        $process = $this->runProcess([
+            '--no-color',
+            '--ignore-branch-rate',
+            $this->getDataFileAbsolutePath('02/cobertura-old.xml'),
+            $this->getDataFileAbsolutePath('02/cobertura-new.xml')
+        ]);
+
+        self::assertStringContainsString(
+            $this->getDataFileContents('02/result-ignore-branch-rate.txt'),
+            $process->getOutput()
+        );
+
+        self::assertStringContainsString('Exit code:', $process->getOutput());
+        self::assertStringContainsString('Time:', $process->getOutput());
+        self::assertStringContainsString('Memory:', $process->getOutput());
+
+        self::assertSame(2, $process->getExitCode());
+        self::assertEmpty($process->getErrorOutput());
+    }
+
+    public function testBranchRateRegressionsIgnoreBranchRate(): void
+    {
+        $process = $this->runProcess([
+            '--no-color',
+            '--ignore-branch-rate',
+            $this->getDataFileAbsolutePath('03/cobertura-old.xml'),
+            $this->getDataFileAbsolutePath('03/cobertura-new.xml')
+        ]);
+
+        self::assertStringContainsString(
+            $this->getDataFileContents('03/result-ignore-branch-rate.txt'),
+            $process->getOutput()
+        );
+
+        self::assertStringContainsString('Exit code:', $process->getOutput());
+        self::assertStringContainsString('Time:', $process->getOutput());
+        self::assertStringContainsString('Memory:', $process->getOutput());
+
+        self::assertSame(0, $process->getExitCode());
+        self::assertEmpty($process->getErrorOutput());
+    }
+
     public function testBranchRateRegressions(): void
     {
         $process = $this->runProcess([
@@ -105,28 +149,6 @@ final class ScriptTest extends TestCase
 
         self::assertStringContainsString(
             $this->getDataFileContents('04/result.txt'),
-            $process->getOutput()
-        );
-
-        self::assertStringContainsString('Exit code:', $process->getOutput());
-        self::assertStringContainsString('Time:', $process->getOutput());
-        self::assertStringContainsString('Memory:', $process->getOutput());
-
-        self::assertSame(2, $process->getExitCode());
-        self::assertEmpty($process->getErrorOutput());
-    }
-
-    public function testLineRateRegressionsIgnoreBranch(): void
-    {
-        $process = $this->runProcess([
-            '--no-color',
-            '--ignore-branch-rate',
-            $this->getDataFileAbsolutePath('02/cobertura-old.xml'),
-            $this->getDataFileAbsolutePath('02/cobertura-new.xml')
-        ]);
-
-        self::assertStringContainsString(
-            $this->getDataFileContents('02/result-ignore-branch.txt'),
             $process->getOutput()
         );
 
