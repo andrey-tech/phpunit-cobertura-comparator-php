@@ -49,17 +49,16 @@ Coverage comparison: cobertura-old.xml -> cobertura-new.xml
 Coverage regressions found in 1 class(es):
 CLASS: App\Purchase\Fixer
 +---------------------------+--------+------------------+--------------------+
-| METHOD                    | status | line coverage, % | branch coverage, % |
+| Method                    | Status | Line coverage, % | Branch coverage, % |
 +---------------------------+--------+------------------+--------------------+
-| CLASS                     | old    | 100.00 -> 55.46  | 100.00 -> 57.13    |
+| CLASS                     | old    | 98.44 -> 92.58   | 92.53 -> 85.22     |
 | fix                       | old    | 100.00 -> 100.00 | 100.00 -> 100.00   |
-| fixCharges                | old    | 100.00 -> 95.11  | 100.00 -> 80.78    |
-| fixPrice                  | old    | 100.00 -> 75.23  | 100.00 -> 66.89    |
-| fixVat                    | new    | x -> 53.53       | x -> 44.11         |
-| fixRate                   | del    | 100.00 -> x      | 100.00 -> x        |
+| fixPrice                  | old    | 96.11 -> 100.00  | 94.76 -> 75.33     |
+| fixRate                   | new    | x -> 85.90       | x -> 95.24         |
+| fixCharges                | del    | 100.00 -> x      | 100.00 -> x        |
 +---------------------------+--------+------------------+--------------------+
 
-Exit code: 2, Time: 569 ms, Memory: 13.41/20.00 MiB.
+Exit code: 2. Time: 6 ms. Memory: 1.40/2.00 MiB.
 ```
 
 Columns in the table:
