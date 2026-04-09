@@ -39,7 +39,7 @@ The command line interface also accepts the following optional arguments:
 An example command line:
 
 ```shell
-./vendor/bin/phpunit-cobertura-formatter cobertura-old.xml cobertura-new.xml 
+./vendor/bin/phpunit-cobertura-comparator cobertura-old.xml cobertura-new.xml 
 ```
 
 An example of the console output:
@@ -62,10 +62,10 @@ Exit code: 2. Time: 6 ms. Memory: 1.40/2.00 MiB.
 ```
 
 Columns in the table:
-- `METHOD` — the method name;
-- `status` — the status of the method or class (`old`, `new`, `del`);
-- `line coverage, %` — the line coverage of the method or class (`old` -> `new`);
-- `branch coverage, %` — the branch coverage of the method or class (`old` -> `new`).
+- `Method` — the method name;
+- `Status` — the status of the method or class (`old`, `new`, `del`);
+- `Line coverage, %` — the line coverage of the method or class (`old` -> `new`);
+- `Branch coverage, %` — the branch coverage of the method or class (`old` -> `new`).
 
 The tool shows line and branch coverage, measured by PHP Unit, in ANSI colors:
 
