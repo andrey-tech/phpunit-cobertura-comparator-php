@@ -45,7 +45,7 @@ An example command line:
 An example of the console output:
 
 ```text
-Coverage comparison: cobertura-old.xml -> cobertura-new.xml
+Coverage comparison: cobertura-old.xml (2025-09-03T06:54:35+00:00) -> cobertura-new.xml (2025-09-10T06:56:15+00:00)
 Coverage regressions found in 1 class(es):
 CLASS: App\Purchase\Fixer
 +---------------------------+--------+------------------+--------------------+

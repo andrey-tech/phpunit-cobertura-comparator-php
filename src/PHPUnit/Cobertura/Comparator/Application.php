@@ -14,6 +14,8 @@ namespace AndreyTech\PHPUnit\Cobertura\Comparator;
 use AndreyTech\PHPUnit\Cobertura\Comparator\Mapper\ClassRegression;
 use AndreyTech\PHPUnit\Cobertura\Comparator\Parser\File;
 use AndreyTech\PHPUnit\Cobertura\Comparator\Renderer\Colorizer;
+use DateMalformedStringException;
+use DateTimeImmutable;
 use Exception;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Throwable;
@@ -65,13 +67,11 @@ final readonly class Application
         $this->configurator->configure();
         $this->consoleOutput->getFormatter()->setDecorated(!$this->configurator->isNoColor());
 
-        $this->printHeader();
-
         $classRegressions = (new Mapper())->map(
             $this->parseCoberturaFiles()->getRegressions()
         );
 
-        $this->printTitle($classRegressions);
+        $this->printConclusion($classRegressions);
 
         (new Renderer(
             $this->consoleOutput,
@@ -87,29 +87,28 @@ final readonly class Application
      */
     private function parseCoberturaFiles(): Storage
     {
+        $storage = new Storage();
+
         $parser = new Parser(
+            new File(
+                $this->configurator->getCoberturaOldFile()
+            ),
             $this->configurator->isIgnoreBranchRate()
         );
 
-        $storage = new Storage();
+        $storage->store($parser->parse(), 0);
+        $oldFileTimestamp = $parser->getTimestamp();
 
-        $storage->store(
-            $parser->parse(
-                new File(
-                    $this->configurator->getCoberturaOldFile()
-                )
+        $parser = new Parser(
+            new File(
+                $this->configurator->getCoberturaNewFile()
             ),
-            0
+            $this->configurator->isIgnoreBranchRate()
         );
 
-        $storage->store(
-            $parser->parse(
-                new File(
-                    $this->configurator->getCoberturaNewFile()
-                )
-            ),
-            1
-        );
+        $storage->store($parser->parse(), 1);
+
+        $this->printFileInfo($oldFileTimestamp, $parser->getTimestamp());
 
         return $storage;
     }
@@ -117,7 +116,7 @@ final readonly class Application
     /**
      * @param list<ClassRegression> $classRegressions
      */
-    private function printTitle(array $classRegressions): void
+    private function printConclusion(array $classRegressions): void
     {
         if (0 === count($classRegressions)) {
             $this->consoleOutput->writeln('<fg=green>No coverage regressions found</>');
@@ -130,15 +129,28 @@ final readonly class Application
         );
     }
 
-    private function printHeader(): void
+    /**
+     * @throws DateMalformedStringException
+     */
+    private function printFileInfo(int $oldFileTimestamp, int $newFileTimestamp): void
     {
         $this->consoleOutput->writeln(
             sprintf(
-                'Coverage comparison: %s -> %s',
+                'Coverage comparison: %s (%s) -> %s (%s)',
                 $this->configurator->getCoberturaOldFile(),
-                $this->configurator->getCoberturaNewFile()
+                $this->formatTimestamp($oldFileTimestamp),
+                $this->configurator->getCoberturaNewFile(),
+                $this->formatTimestamp($newFileTimestamp)
             )
         );
+    }
+
+    /**
+     * @throws DateMalformedStringException
+     */
+    private function formatTimestamp(int $timestamp): string
+    {
+        return (new DateTimeImmutable('@' . $timestamp))->format(DateTimeImmutable::RFC3339);
     }
 
     private function printStats(int $exitCode): void

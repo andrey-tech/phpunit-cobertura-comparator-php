@@ -17,10 +17,13 @@ use Exception;
 use Generator;
 use SimpleXMLElement;
 
-final readonly class Parser
+final class Parser
 {
+    private int $timestamp = 0;
+
     public function __construct(
-        private bool $ignoreBranchRate
+        private readonly File $file,
+        private readonly bool $ignoreBranchRate
     ) {
     }
 
@@ -29,24 +32,38 @@ final readonly class Parser
      *
      * @throws Exception
      */
-    public function parse(File $file): Generator
+    public function parse(): Generator
     {
         $xml = new SimpleXMLElement(
-            $file->getContent()
+            $this->file->getContent()
         );
+
+        $this->timestamp = isset($xml['timestamp']) ? (int) $xml['timestamp'] : 0;
 
         foreach ($xml->xpath('//class') ?? [] as $class) {
             foreach ($class->methods->method ?? [] as $method) {
-                yield new Metrics(
-                    file: (string) $class['filename'],
-                    className: (string) $class['name'],
-                    classLineRate: (float) $class['line-rate'],
-                    classBranchRate: $this->ignoreBranchRate ? 0.0 : (float) $class['branch-rate'],
-                    methodName: (string) $method['name'],
-                    methodLineRate: (float) $method['line-rate'],
-                    methodBranchRate: $this->ignoreBranchRate ? 0.0 : (float) $method['branch-rate']
-                );
+                yield $this->buildMetrics($class, $method);
             }
         }
+    }
+
+    public function getTimestamp(): int
+    {
+        return $this->timestamp;
+    }
+
+    private function buildMetrics(
+        SimpleXMLElement $class,
+        SimpleXMLElement $method
+    ): Metrics {
+        return new Metrics(
+            file: (string) $class['filename'],
+            className: (string) $class['name'],
+            classLineRate: (float) $class['line-rate'],
+            classBranchRate: $this->ignoreBranchRate ? 0.0 : (float) $class['branch-rate'],
+            methodName: (string) $method['name'],
+            methodLineRate: (float) $method['line-rate'],
+            methodBranchRate: $this->ignoreBranchRate ? 0.0 : (float) $method['branch-rate']
+        );
     }
 }
