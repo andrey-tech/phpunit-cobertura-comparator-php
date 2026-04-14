@@ -89,28 +89,37 @@ final readonly class Application
     {
         $storage = new Storage();
 
-        $parser = new Parser(
-            new File(
-                $this->configurator->getCoberturaOldFile()
-            ),
-            $this->configurator->isIgnoreBranchRate()
-        );
-
+        $parser = $this->parseCoberturaFile($this->configurator->getCoberturaOldFile());
         $storage->store($parser->parse(), 0);
         $oldFileTimestamp = $parser->getTimestamp();
 
-        $parser = new Parser(
-            new File(
-                $this->configurator->getCoberturaNewFile()
-            ),
-            $this->configurator->isIgnoreBranchRate()
-        );
-
+        $parser = $this->parseCoberturaFile($this->configurator->getCoberturaNewFile());
         $storage->store($parser->parse(), 1);
 
-        $this->printFileInfo($oldFileTimestamp, $parser->getTimestamp());
+        $this->consoleOutput->writeln(
+            sprintf(
+                'Coverage comparison: %s -> %s',
+                $this->formatTimestamp($oldFileTimestamp),
+                $this->formatTimestamp($parser->getTimestamp())
+            )
+        );
 
         return $storage;
+    }
+
+    private function parseCoberturaFile(string $file): Parser
+    {
+        $this->consoleOutput->writeln(
+            sprintf(
+                "Parsing Cobertura XML file '%s'...",
+                $file,
+            )
+        );
+
+        return new Parser(
+            new File($file),
+            $this->configurator->isIgnoreBranchRate()
+        );
     }
 
     /**
@@ -126,22 +135,6 @@ final readonly class Application
 
         $this->consoleOutput->writeln(
             sprintf('<fg=red>Coverage regressions found in %u class(es):</>', count($classRegressions))
-        );
-    }
-
-    /**
-     * @throws DateMalformedStringException
-     */
-    private function printFileInfo(int $oldFileTimestamp, int $newFileTimestamp): void
-    {
-        $this->consoleOutput->writeln(
-            sprintf(
-                'Coverage comparison: %s (%s) -> %s (%s)',
-                $this->configurator->getCoberturaOldFile(),
-                $this->formatTimestamp($oldFileTimestamp),
-                $this->configurator->getCoberturaNewFile(),
-                $this->formatTimestamp($newFileTimestamp)
-            )
         );
     }
 
