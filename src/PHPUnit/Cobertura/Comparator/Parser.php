@@ -19,7 +19,7 @@ use SimpleXMLElement;
 
 final class Parser
 {
-    private int $timestamp = 0;
+    private ?int $timestamp = null;
 
     public function __construct(
         private readonly File $file,
@@ -38,7 +38,7 @@ final class Parser
             $this->file->getContent()
         );
 
-        $this->timestamp = isset($xml['timestamp']) ? (int) $xml['timestamp'] : 0;
+        $this->timestamp = isset($xml['timestamp']) ? (int) $xml['timestamp'] : null;
 
         foreach ($xml->xpath('//class') ?? [] as $class) {
             foreach ($class->methods->method ?? [] as $method) {
@@ -47,7 +47,7 @@ final class Parser
         }
     }
 
-    public function getTimestamp(): int
+    public function getTimestamp(): ?int
     {
         return $this->timestamp;
     }

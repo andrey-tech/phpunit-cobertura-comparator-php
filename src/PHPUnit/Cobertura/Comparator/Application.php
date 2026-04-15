@@ -141,8 +141,12 @@ final readonly class Application
     /**
      * @throws DateMalformedStringException
      */
-    private function formatTimestamp(int $timestamp): string
+    private function formatTimestamp(?int $timestamp): string
     {
+        if (null === $timestamp) {
+            return 'x';
+        }
+
         return (new DateTimeImmutable('@' . $timestamp))->format(DateTimeImmutable::RFC3339);
     }
 
